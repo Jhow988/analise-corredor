@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Análise para Corredores</title>
+    
+    <!-- Estilos -->
+    <link rel="stylesheet" href="styles.css">
+    
+    <!-- Scripts de Bibliotecas Externas (com defer) -->
+    <script src="https://cdn.tailwindcss.com" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
+    
+    <!-- Scripts da Aplicação (com defer, na ordem correta de dependência) -->
+    <script src="js/storage.js" defer></script>
+    <script src="js/masks.js" defer></script>
+    <script src="js/analysis.js" defer></script>
+    <script src="js/pdf-export.js" defer></script>
+    <script src="js/tabs.js" defer></script>
+    <script src="js/main.js" defer></script>
+</head>
+<body class="min-h-screen bg-gray-50">
+    <!-- Layout principal com sidebar -->
+    <div class="flex w-full min-h-screen">
+        <!-- Sidebar - Menu Lateral -->
+        <div id="sidebar" class="w-72 bg-white shadow-xl min-h-screen flex flex-col flex-shrink-0 transition-all duration-300 ease-in-out relative border-r border-gray-200">
+            <!-- Cabeçalho com Toggle -->
+            <div class="p-6 border-b border-gray-100">
+                <div id="sidebar-header" class="transition-all duration-300">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h1 class="text-xl font-bold text-gray-900 mb-1 leading-tight">Sistema de Análise</h1>
+                            <p class="text-sm text-gray-500 font-medium">Para Corredores</p>
+                        </div>
+                        <button id="toggle-sidebar" class="w-8 h-8 bg-gray-100 hover:bg-gray-200 text-gray-600 hover:text-gray-800 rounded-lg flex items-center justify-center transition-all duration-200 border border-gray-200 hover:border-gray-300" title="Recolher menu">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Menu de Navegação -->
+            <nav class="flex-1 px-4 py-6">
+                <div class="space-y-3">
+                    <button class="sidebar-btn w-full flex items-center px-4 py-3 space-x-3 text-gray-700 hover:bg-gray-50 hover:text-gray-900 transition-all duration-200 rounded-xl" data-tab="entrada">
+                        <span class="text-lg">📝</span>
+                        <span class="font-medium text-sm flex-1 text-left truncate">Entrada de Dados</span>
+                    </button>
+                    <button class="sidebar-btn w-full flex items-center px-4 py-3 space-x-3 text-gray-700 hover:bg-gray-50 hover:text-gray-900 transition-all duration-200 rounded-xl" data-tab="analise">
+                        <span class="text-lg">📊</span>
+                        <span class="font-medium text-sm flex-1 text-left truncate">Análise e Estratégia</span>
+                    </button>
+                    <button class="sidebar-btn w-full flex items-center px-4 py-3 space-x-3 text-gray-700 hover:bg-gray-50 hover:text-gray-900 transition-all duration-200 rounded-xl" data-tab="pos-prova">
+                        <span class="text-lg">🏃‍♂️</span>
+                        <span class="font-medium text-sm flex-1 text-left truncate">Análise Pós-Prova</span>
+                    </button>
+                </div>
+            </nav>
+
+            <!-- Anúncio Lateral -->
+            <div id="sidebar-ad" class="p-4 border-t border-gray-100">
+                <div class="bg-gradient-to-br from-gray-50 to-gray-100 border-2 border-dashed border-gray-300 rounded-xl p-4 text-center hover:from-gray-100 hover:to-gray-200 transition-all duration-200">
+                    <div class="text-gray-500">
+                        <div class="text-sm font-semibold mb-1">Google AdSense</div>
+                        <div class="text-xs text-gray-400">Banner Lateral</div>
+                        <div class="text-xs text-gray-400">240×400</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Conteúdo Principal -->
+        <div class="flex-1 p-6 overflow-x-auto transition-all duration-300">
+            <!-- Cabeçalho -->
+            <div class="mb-6">
+                <h2 id="page-title" class="text-2xl font-bold text-gray-900 mb-2">Entrada de Dados</h2>
+                <p id="page-subtitle" class="text-sm text-gray-600">Preencha os dados da prova e do corredor</p>
+            </div>
+
+            <!-- Anúncio Principal - Topo -->
+            <div class="mb-6">
+                <div class="bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-4 text-center mx-auto" style="max-width: 728px; height: 90px;">
+                    <div class="text-gray-500">
+                        <div class="text-sm font-medium">Google AdSense</div>
+                        <div class="text-xs">Banner Principal - 728x90</div>
+                        <div class="text-xs mt-1">Espaço para anúncio</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Conteúdo das Tabs -->
+            <div id="tab-content">
+                <!-- Conteúdo será carregado dinamicamente -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+        <div class="bg-white p-6 rounded-lg shadow-lg">
+            <div class="flex items-center space-x-3">
+                <div class="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600"></div>
+                <span class="text-gray-700">Gerando análise...</span>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
