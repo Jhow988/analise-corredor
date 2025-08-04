@@ -35,6 +35,9 @@ class TabManager {
         const header = headers[tabName] || headers['entrada'];
         this.pageTitle.textContent = header.title;
         this.pageSubtitle.textContent = header.subtitle;
+
+        // Atualiza o título da aba do navegador para SEO e UX
+        document.title = `Análise de Corrida - ${header.title}`;
     }
 
     loadTabContent(tabName) {
@@ -272,6 +275,15 @@ class TabManager {
     }
 
     loadPosProvaTab() {
-        this.tabContent.innerHTML = `<div class="text-center py-16"><div class="text-6xl mb-4">🏆</div><h3 class="text-2xl font-bold text-gray-800">Funcionalidade em Desenvolvimento</h3><p class="text-gray-500 mt-2">Em breve, você poderá analisar sua performance real aqui.</p></div>`;
+        const preAnalysis = appData.get('analysis');
+        if (!preAnalysis) {
+            this.tabContent.innerHTML = `<div class="text-center py-16"><div class="text-6xl mb-4">🏁</div><h3 class="text-2xl font-bold text-gray-800">Primeiro, gere uma análise</h3><p class="text-gray-500 mt-2">A análise pós-prova compara seu resultado com a estimativa gerada na aba 'Análise e Estratégia'.</p></div>`;
+            return;
+        }
+
+        const postAnalysis = appData.get('postRaceAnalysis');
+        // Valida se a análise pós-prova corresponde à análise pré-prova atual (baseado na distância)
+        const distanceMatch = postAnalysis ? preAnalysis.metadata.distance === parseFloat(appData.get('raceDistance')) : false;
+
     }
 }

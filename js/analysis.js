@@ -319,6 +319,48 @@ class RunningAnalysisEngine {
         if (ratio <= 4) return 'Média';
         return 'Baixa';
     }
+
+    generatePostRaceAnalysis(preRaceAnalysis, actualTime) {
+        if (!preRaceAnalysis || !preRaceAnalysis.timeEstimate || !preRaceAnalysis.timeEstimate.realistic) {
+            throw new Error("Análise pré-prova não encontrada ou incompleta.");
+        }
+        if (!actualTime || !actualTime.includes(':')) {
+            throw new Error("Tempo real da prova é inválido. Use o formato h:mm:ss ou mm:ss.");
+        }
+
+        const estimatedSeconds = this.parseTimeToSeconds(preRaceAnalysis.timeEstimate.realistic);
+        const actualSeconds = this.parseTimeToSeconds(actualTime);
+        const distance = preRaceAnalysis.metadata.distance;
+
+        if (actualSeconds <= 0) {
+            throw new Error("Tempo real da prova deve ser maior que zero.");
+        }
+
+        const differenceSeconds = actualSeconds - estimatedSeconds;
+        const differencePercentage = (differenceSeconds / estimatedSeconds) * 100;
+
+        const estimatedPaceSeconds = estimatedSeconds / distance;
+        const actualPaceSeconds = actualSeconds / distance;
+
+        let feedback = '';
+        if (differencePercentage < -2) {
+            feedback = 'Performance excepcional! Você superou a estimativa de forma significativa.';
+        } else if (differencePercentage <= 0) {
+            feedback = 'Parabéns! Você atingiu ou superou a sua meta de tempo realista.';
+        } else if (differencePercentage <= 5) {
+            feedback = 'Ótimo resultado! Você chegou muito perto da estimativa. Excelente esforço.';
+        } else {
+            feedback = 'Prova concluída! Cada corrida é um aprendizado. Use os dados para ajustar o treino para a próxima.';
+        }
+
+        return {
+            estimatedTime: preRaceAnalysis.timeEstimate.realistic, actualTime: actualTime,
+            difference: this.formatSecondsToTime(Math.abs(differenceSeconds)),
+            wasFaster: differenceSeconds < 0, differencePercentage: differencePercentage.toFixed(2),
+            estimatedPace: this.formatSecondsToTime(estimatedPaceSeconds, 'pace'), actualPace: this.formatSecondsToTime(actualPaceSeconds, 'pace'),
+            feedback: feedback, generatedAt: new Date().toISOString()
+        };
+    }
 }
 
 const analysisEngine = new RunningAnalysisEngine();

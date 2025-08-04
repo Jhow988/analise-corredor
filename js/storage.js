@@ -76,7 +76,9 @@ class AppData {
             pb42k: storage.get('pb42k', ''),
             objective: storage.get('objective', 'Tempo Alvo'),
             targetTime: storage.get('targetTime', ''),
-            analysis: storage.get('analysis', null)
+            analysis: storage.get('analysis', null),
+            actualRaceTime: storage.get('actualRaceTime', ''),
+            postRaceAnalysis: storage.get('postRaceAnalysis', null)
         };
     }
 
