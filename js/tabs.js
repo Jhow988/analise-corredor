@@ -9,9 +9,9 @@ class TabManager {
         this.pageSubtitle = document.getElementById('page-subtitle');
         this.sidebar = document.getElementById('sidebar');
         this.sidebarOverlay = document.getElementById('sidebar-overlay');
-        this.toggleBtn = document.getElementById('toggle-sidebar');
+        // this.toggleBtn = document.getElementById('toggle-sidebar');
         this.initializeTabs();
-        this.setupSidebarToggle();
+        // this.setupSidebarToggle();
     }
 
     initializeTabs() {
@@ -24,30 +24,7 @@ class TabManager {
         this.switchToTab(appData.get('activeTab') || 'entrada');
     }
 
-    setupSidebarToggle() {
-        if (this.toggleBtn) {
-            this.toggleBtn.addEventListener('click', () => {
-                if (window.innerWidth <= 768) {
-                    this.toggleSidebar();
-                }
-            });
-        }
-        if (this.sidebarOverlay) {
-            this.sidebarOverlay.addEventListener('click', () => {
-                if (window.innerWidth <= 768) {
-                    this.hideSidebarOnMobile();
-                }
-            });
-        }
-        // Garante que o menu e overlay fiquem corretos ao redimensionar
-        window.addEventListener('resize', () => {
-            if (window.innerWidth > 768) {
-                this.sidebar.classList.remove('mobile-open');
-                this.sidebarOverlay.classList.remove('visible');
-                this.sidebarOverlay.classList.add('hidden');
-            }
-        });
-    }
+    // Removido botão de toggle do menu lateral
 
     toggleSidebar() {
         this.sidebar.classList.toggle('mobile-open');
