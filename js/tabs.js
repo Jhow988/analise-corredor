@@ -27,30 +27,38 @@ class TabManager {
     setupSidebarToggle() {
         if (this.toggleBtn) {
             this.toggleBtn.addEventListener('click', () => {
-                this.toggleSidebar();
+                if (window.innerWidth <= 768) {
+                    this.toggleSidebar();
+                }
             });
         }
         if (this.sidebarOverlay) {
             this.sidebarOverlay.addEventListener('click', () => {
-                this.hideSidebarOnMobile();
+                if (window.innerWidth <= 768) {
+                    this.hideSidebarOnMobile();
+                }
             });
         }
+        // Garante que o menu e overlay fiquem corretos ao redimensionar
+        window.addEventListener('resize', () => {
+            if (window.innerWidth > 768) {
+                this.sidebar.classList.remove('mobile-open');
+                this.sidebarOverlay.classList.remove('visible');
+                this.sidebarOverlay.classList.add('hidden');
+            }
+        });
     }
 
     toggleSidebar() {
-        if (window.innerWidth <= 768) {
-            this.sidebar.classList.toggle('mobile-open');
-            this.sidebarOverlay.classList.toggle('visible');
-            this.sidebarOverlay.classList.toggle('hidden');
-        }
+        this.sidebar.classList.toggle('mobile-open');
+        this.sidebarOverlay.classList.toggle('visible');
+        this.sidebarOverlay.classList.toggle('hidden');
     }
 
     hideSidebarOnMobile() {
-        if (window.innerWidth <= 768) {
-            this.sidebar.classList.remove('mobile-open');
-            this.sidebarOverlay.classList.remove('visible');
-            this.sidebarOverlay.classList.add('hidden');
-        }
+        this.sidebar.classList.remove('mobile-open');
+        this.sidebarOverlay.classList.remove('visible');
+        this.sidebarOverlay.classList.add('hidden');
     }
     switchToTab(tabName) {
         appData.set('activeTab', tabName);
