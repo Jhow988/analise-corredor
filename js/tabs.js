@@ -9,9 +9,21 @@ class TabManager {
         this.pageSubtitle = document.getElementById('page-subtitle');
         this.sidebar = document.getElementById('sidebar');
         this.sidebarOverlay = document.getElementById('sidebar-overlay');
-        // this.toggleBtn = document.getElementById('toggle-sidebar');
+        this.menuOverlayBtn = document.getElementById('menu-overlay-btn');
         this.initializeTabs();
-        // this.setupSidebarToggle();
+        this.setupMenuOverlayBtn();
+    }
+    setupMenuOverlayBtn() {
+        if (this.menuOverlayBtn) {
+            this.menuOverlayBtn.addEventListener('click', () => {
+                this.toggleSidebar();
+            });
+        }
+        if (this.sidebarOverlay) {
+            this.sidebarOverlay.addEventListener('click', () => {
+                this.toggleSidebar();
+            });
+        }
     }
 
     initializeTabs() {
