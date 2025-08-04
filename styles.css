@@ -81,3 +81,39 @@
 .table-responsive tbody tr:last-child {
     border-bottom: none;
 }
+
+/* Estilos da Sidebar para Dispositivos Móveis */
+@media (max-width: 768px) {
+    #sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100%;
+        transform: translateX(-100%);
+        z-index: 40; /* Garante que o menu fique acima do conteúdo */
+        transition: transform 0.3s ease-in-out;
+    }
+
+    #sidebar.mobile-open {
+        transform: translateX(0);
+    }
+
+    /* Overlay para escurecer o fundo quando o menu estiver aberto */
+    #sidebar-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 39;
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+    }
+
+    #sidebar-overlay.visible {
+        opacity: 1;
+        visibility: visible;
+    }
+}

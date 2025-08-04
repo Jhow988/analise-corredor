@@ -56,19 +56,47 @@ class MainApp {
     initializeSidebar() {
         const toggleBtn = document.getElementById('toggle-sidebar');
         const sidebar = document.getElementById('sidebar');
-        if (!toggleBtn || !sidebar) {
-            console.error('Elementos do sidebar não encontrados');
+        const overlay = document.getElementById('sidebar-overlay');
+
+        if (!toggleBtn || !sidebar || !overlay) {
+            console.error('Elementos essenciais da sidebar não encontrados');
             return;
         }
-        const isCollapsed = appData.get('sidebarCollapsed') || false;
-        if (isCollapsed) {
-            sidebar.classList.add('sidebar-collapsed');
-        }
-        toggleBtn.addEventListener('click', () => {
-            const currentState = sidebar.classList.contains('sidebar-collapsed');
-            sidebar.classList.toggle('sidebar-collapsed', !currentState);
-            appData.set('sidebarCollapsed', !currentState);
+
+        const isMobile = () => window.innerWidth < 768;
+
+        const toggleSidebar = () => {
+            if (isMobile()) {
+                const isOpen = sidebar.classList.contains('mobile-open');
+                sidebar.classList.toggle('mobile-open', !isOpen);
+                overlay.classList.toggle('visible', !isOpen);
+            } else {
+                const isCollapsed = sidebar.classList.contains('sidebar-collapsed');
+                sidebar.classList.toggle('sidebar-collapsed', !isCollapsed);
+                appData.set('sidebarCollapsed', !isCollapsed);
+            }
+        };
+
+        toggleBtn.addEventListener('click', toggleSidebar);
+        overlay.addEventListener('click', toggleSidebar); // Fecha ao clicar no overlay
+
+        // Fecha o menu mobile ao clicar em um botão da sidebar
+        document.querySelectorAll('.sidebar-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                if (isMobile()) {
+                    toggleSidebar();
+                }
+            });
         });
-        console.log('✅ Sidebar inicializado.');
+
+        // Garante que o estado da sidebar (desktop) seja restaurado ao carregar
+        if (!isMobile()) {
+            const isCollapsed = appData.get('sidebarCollapsed') || false;
+            if (isCollapsed) {
+                sidebar.classList.add('sidebar-collapsed');
+            }
+        }
+
+        console.log('✅ Sidebar inicializado com lógica responsiva.');
     }
 }
